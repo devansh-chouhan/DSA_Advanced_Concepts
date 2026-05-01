@@ -1,4 +1,4 @@
-class MinBinaryHeap {
+class MaxBinaryHeap {
   constructor() {
     this.heap = [];
   }
@@ -20,64 +20,65 @@ class MinBinaryHeap {
   bubbleUp() {
     let idx = this.heap.length - 1;
     const element = this.heap[idx];
-
     while (idx > 0) {
       let parentIdx = Math.floor((idx - 1) / 2);
       let parent = this.heap[parentIdx];
-      if (element >= parent) break;
-      this.heap[parentIdx] = element;
-      this.heap[idx] = parent;
+
+      if (element <= parent) break;
+      [this.heap[idx], this.heap[parentIdx]] = [
+        this.heap[parentIdx],
+        this.heap[idx],
+      ];
       idx = parentIdx;
     }
   }
 
   pop() {
     if (this.heap.length === 0) return null;
-    const min = this.heap[0];
+    const max = this.heap[0];
     const end = this.heap.pop();
     if (this.heap.length > 0) {
       this.heap[0] = end;
       this.bubbleDown();
     }
-    return min;
+    return max;
   }
 
   bubbleDown() {
     let idx = 0;
-    const length = this.heap.length;
+    let length = this.heap.length;
     while (true) {
       let leftChild, rightChild;
+      let largestIdx = idx;
       let leftChildIdx = 2 * idx + 1;
       let rightChildIdx = 2 * idx + 2;
-      let smallestIdx = idx;
 
       if (leftChildIdx < length) {
         leftChild = this.heap[leftChildIdx];
-        if (leftChild < this.heap[smallestIdx]) {
-          smallestIdx = leftChildIdx;
+        if (leftChild > this.heap[largestIdx]) {
+          largestIdx = leftChildIdx;
         }
       }
       if (rightChildIdx < length) {
         rightChild = this.heap[rightChildIdx];
-        if (rightChild < this.heap[smallestIdx]) {
-          smallestIdx = rightChildIdx;
+        if (rightChild > this.heap[largestIdx]) {
+          largestIdx = rightChildIdx;
         }
       }
-
-      if (smallestIdx === idx) break;
-      [this.heap[idx], this.heap[smallestIdx]] = [
-        this.heap[smallestIdx],
+      if (largestIdx === idx) break;
+      [this.heap[idx], this.heap[largestIdx]] = [
+        this.heap[largestIdx],
         this.heap[idx],
       ];
-      idx = smallestIdx;
+      idx = largestIdx;
     }
   }
 }
 
-let heap = new MinBinaryHeap();
+let heap = new MaxBinaryHeap();
 heap.push(5);
 heap.push(3);
-heap.push(8);
+heap.push(10);
 heap.push(4);
 heap.push(7);
 console.log(heap.heap);
